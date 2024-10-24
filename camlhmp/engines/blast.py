@@ -45,11 +45,13 @@ def run_blast(engine: str, subject: str, query: str, min_pident: float, min_cove
     cat_type = "zcat" if str(subject).endswith(".gz") else "cat"
     qcov_hsp_perc = f"-qcov_hsp_perc {min_coverage}" if min_coverage else ""
     perc_identity = f"-perc_identity {min_pident}" if min_pident and engine != "tblastn" else ""
-    stdout, stderr = execute(
+    res = execute(
         f"{cat_type} {subject} | {engine} -query {query} -subject - -outfmt '6 {outfmt}' {qcov_hsp_perc} {perc_identity}",
         capture=True,
     )
-
+    if not res:
+        return [[], [{"qseqid": "NO_HITS"}], []]
+    stdout, stderr = res
     # Convert BLAST results to a list of dicts
     results = []
     target_hits = []

@@ -26,6 +26,7 @@ executor = "^23.2"
 rich = "^13.7.1"
 rich-click = "^1.7.4"
 biopython = "^1.83"
+guigaga = "^0.0.9"
 
 [tool.poetry.group.dev.dependencies]
 executor = "^23.2"

@@ -10,6 +10,7 @@ import rich_click as click
 from rich import print
 from rich.logging import RichHandler
 from rich.table import Table
+from guigaga import gui
 
 import camlhmp
 from camlhmp.engines.blast import run_blast
@@ -55,17 +56,19 @@ click.rich_click.OPTION_GROUPS = {
     ]
 }
 
-
+@gui()
 @click.command()
 @click.option(
     "--input",
     "-i",
+    type=click.Path(exists=False),
     required=False if "--version" in sys.argv else True,
     help="Input file in FASTA format to classify",
 )
 @click.option(
     "--yaml",
     "-y",
+    type=click.Path(exists=False),
     required=True,
     default=os.environ.get("CAML_YAML", None),
     show_default=True,
@@ -74,6 +77,7 @@ click.rich_click.OPTION_GROUPS = {
 @click.option(
     "--targets",
     "-t",
+    type=click.Path(exists=False),
     required=False if "--version" in sys.argv else True,
     default=os.environ.get("CAML_TARGETS", None),
     show_default=True,
@@ -82,8 +86,7 @@ click.rich_click.OPTION_GROUPS = {
 @click.option(
     "--outdir",
     "-o",
-    type=click.Path(exists=False),
-    default="./",
+    default="./outdir",
     show_default=True,
     help="Directory to write output",
 )
@@ -168,13 +171,13 @@ def camlhmp_blast_alleles(
     file_exists_error(blast_tsv, force)
     file_exists_error(details_tsv, force)
 
-    # Check if params are set in the YAML (only change if not set on the command line)
-    if "--min-pident" not in sys.argv:
-        if "min_pident" in framework["engine"]["params"]:
-            min_pident = framework["engine"]["params"]["min_pident"]
-    if "--min-coverage" not in sys.argv:
-        if "min_coverage" in framework["engine"]["params"]:
-            min_coverage = framework["engine"]["params"]["min_coverage"]
+    # # Check if params are set in the YAML (only change if not set on the command line)
+    # if "--min-pident" not in sys.argv:
+    #     if "min_pident" in framework["engine"]["params"]:
+    #         min_pident = framework["engine"]["params"]["min_pident"]
+    # if "--min-coverage" not in sys.argv:
+    #     if "min_coverage" in framework["engine"]["params"]:
+    #         min_coverage = framework["engine"]["params"]["min_coverage"]
 
 
     # Describe the command line arguments
